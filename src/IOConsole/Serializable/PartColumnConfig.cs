@@ -5,6 +5,7 @@ namespace IOConsole.Serializable;
 [Serializable]
 public class PartColumnConfig
 {
+    public int DrawingReferenceColumn { get; set; } = 1;
     public int PartNumberColumn { get; set; } = 2;
     public int DeviceTypeColumn { get; set; } = 3;
     public int DeviceNameColumn { get; set; } = 4;

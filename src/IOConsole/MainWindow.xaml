@@ -4,93 +4,37 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="IO Console" Height="540" Width="1300" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
-    <Window.Resources>
-        <Style TargetType="Label">
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="HorizontalAlignment" Value="Right"/>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="FontFamily" Value="Consolas"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Margin" Value="5"/>
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="BorderThickness" Value="0.5"/>
-            <Setter Property="Height" Value="30"/>
-            <Setter Property="Margin" Value="5"/>
-        </Style>
-    </Window.Resources>
+        Title="IO Console" Height="560" Width="1000" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="4*"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="5*"/>
+            <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Header="CSV Column Settings" Margin="5">
-            <Grid Name="ColumnSettingsGrid">
+        <GroupBox Grid.Row="0" Header="Import/Export SPEA BOM CSV" Margin="5">
+            <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
-                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Row="0" Grid.Column="0" Content="Part Number:"/>
-                <TextBox Grid.Row="0" Grid.Column="1" Name="PartNumberColumnNumberBox"/>
-                <Label Grid.Row="1" Grid.Column="0" Content="Device Type:"/>
-                <TextBox Grid.Row="1" Grid.Column="1" Name="DeviceTypeColumnNumberBox"/>
-                <Label Grid.Row="2" Grid.Column="0" Content="Device Name:"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Name="DeviceNameColumnNumberBox"/>
-                <Label Grid.Row="3" Grid.Column="0" Content="Value:"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Name="ValueColumnNumberBox"/>
-                <Label Grid.Row="4" Grid.Column="0" Content="Tol+:"/>
-                <TextBox Grid.Row="4" Grid.Column="1" Name="PositiveToleranceColumnNumberBox"/>
-                <Label Grid.Row="5" Grid.Column="0" Content="Tol-:"/>
-                <TextBox Grid.Row="5" Grid.Column="1" Name="NegativeToleranceColumnNumberBox"/>
-                <Label Grid.Row="6" Grid.Column="0" Content="Case:"/>
-                <TextBox Grid.Row="6" Grid.Column="1" Name="CaseColumnNumberBox"/>
-                <Label Grid.Row="7" Grid.Column="0" Content="Case Identifier:"/>
-                <TextBox Grid.Row="7" Grid.Column="1" Name="CaseIdentifierColumnNumberBox"/>
-                <Label Grid.Row="8" Grid.Column="0" Content="Skipped rows in csv:"/>
-                <TextBox Grid.Row="8" Grid.Column="1" Name="SkippedRowNumberBox"/>
-                <Button Grid.Row="9" Grid.Column="1" Name="SaveColumnNumberConfigButton">
-                    Save
-                </Button>
-            </Grid>
-        </GroupBox>
-        <GroupBox Grid.Row="0" Grid.Column="1" Header="Import SPEA BOM CSV" Margin="5">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="3*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
                 <Label Grid.Column="0">
-                    Choose File:
+                    Choose File(s):
                 </Label>
-                <TextBox Grid.Column="1" Name="CsvFilenameBox"/>
-                <Button Grid.Column="2" Content="Select" Name="SelectCsvButton"/>
-                <Button Grid.Column="3" Content="Import" Name="ImportCsvButton"/>
+                <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4" Name="CsvFilenameBox"/>
+                <Button Grid.Column="5" Grid.Row="0" Content="Select" Name="SelectCsvButton"/>
+                <Button Grid.Column="1" Grid.Row="1" Content="Import Csv File" Name="ImportCsvButton"/>
+                <Button Grid.Column="2" Grid.Row="1" Content="Rollback Last Importation" Name="RollbackButton"/>
+                <Button Grid.Column="4" Grid.Row="1" Content="Export Csv File" Name="ExportCsvButton"/>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Grid.Column="1" Header="Update Database" Margin="5, 0, 5, 5">
+        <GroupBox Grid.Row="1" Header="Update Database" Margin="5, 0, 5, 5">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
@@ -105,7 +49,7 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="4*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" MaxWidth="150"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Grid.Row="0">
                             Part Number(s):
@@ -118,10 +62,11 @@
                             Note:
                         </Label>
                         <TextBlock Grid.Column="1" Grid.Row="1"
+                                   Grid.ColumnSpan="2"
                                    FontFamily="Consolas"
                                    FontSize="14"
                                    TextAlignment="Left" VerticalAlignment="Center" Margin="5">
-                            Your can enter multiple part numbers, separated by comma (,).
+                            You can enter multiple or partial part numbers, separated by comma (,).
                         </TextBlock>
                     </Grid>
                 </GroupBox>

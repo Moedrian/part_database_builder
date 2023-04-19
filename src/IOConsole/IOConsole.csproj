@@ -8,6 +8,7 @@
 	  <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 	  <ApplicationIcon>favicon.ico</ApplicationIcon>
 	  <PlatformTarget>x64</PlatformTarget>
+	  <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

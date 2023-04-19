@@ -1,0 +1,86 @@
+﻿<Window x:Class="IOConsole.ColumnSettings"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:IOConsole"
+        mc:Ignorable="d"
+        Title="Column Number Settings" Height="240" Width="1100" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"></Setter>
+            <Setter Property="FontFamily" Value="Consolas"></Setter>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="10, 0" Name="TextBoxesGrid">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <!-- ROW 0 -->
+        <Label Grid.Row="0" Grid.Column="0" Content="Drawing Reference:"/>
+        <TextBox Grid.Row="0" Grid.Column="1" Name="DrawingReferenceColumnNumberBox"/>
+        <TextBlock Grid.Row="0" Grid.Column="2" Name="DrawingReferenceColumnAlpha"/>
+
+        <Label Grid.Row="0" Grid.Column="3" Content="Part Number:"/>
+        <TextBox Grid.Row="0" Grid.Column="4" Name="PartNumberColumnNumberBox"/>
+        <TextBlock Grid.Row="0" Grid.Column="5" Name="PartNumberColumnAlpha"/>
+
+        <Label Grid.Row="0" Grid.Column="6" Content="Device Type:"/>
+        <TextBox Grid.Row="0" Grid.Column="7" Name="DeviceTypeColumnNumberBox"/>
+        <TextBlock Grid.Row="0" Grid.Column="8" Name="DeviceTypeColumnAlpha"/>
+
+        <Label Grid.Row="0" Grid.Column="9" Content="Device Name:"/>
+        <TextBox Grid.Row="0" Grid.Column="10" Name="DeviceNameColumnNumberBox"/>
+        <TextBlock Grid.Row="0" Grid.Column="11" Name="DeviceNameColumnAlpha"/>
+
+        <Label Grid.Row="0" Grid.Column="12" Content="Value:"/>
+        <TextBox Grid.Row="0" Grid.Column="13" Name="ValueColumnNumberBox"/>
+        <TextBlock Grid.Row="0" Grid.Column="14" Name="ValueColumnAlpha"/>
+        <!-- ROW 1 -->
+        <Label Grid.Row="1" Grid.Column="0" Content="Tol+:"/>
+        <TextBox Grid.Row="1" Grid.Column="1" Name="PositiveToleranceColumnNumberBox"/>
+        <TextBlock Grid.Row="1" Grid.Column="2" Name="PositiveToleranceColumnAlpha"/>
+
+        <Label Grid.Row="1" Grid.Column="3" Content="Tol-:"/>
+        <TextBox Grid.Row="1" Grid.Column="4" Name="NegativeToleranceColumnNumberBox"/>
+        <TextBlock Grid.Row="1" Grid.Column="5" Name="NegativeToleranceColumnAlpha"/>
+
+        <Label Grid.Row="1" Grid.Column="6" Content="Case:"/>
+        <TextBox Grid.Row="1" Grid.Column="7" Name="CaseColumnNumberBox"/>
+        <TextBlock Grid.Row="1" Grid.Column="8" Name="CaseColumnAlpha"/>
+
+        <Label Grid.Row="1" Grid.Column="9" Content="Case Identifier:"/>
+        <TextBox Grid.Row="1" Grid.Column="10" Name="CaseIdentifierColumnNumberBox"/>
+        <TextBlock Grid.Row="1" Grid.Column="11" Name="CaseIdentifierColumnAlpha"/>
+        <!-- ROW 2 -->
+        <Label Grid.Row="2" Grid.Column="11" Grid.ColumnSpan="2" Content="Skipped rows in csv:"/>
+        <TextBox Grid.Row="2" Grid.Column="13" Name="SkippedRowNumberBox"/>
+        <!-- ROW 3 -->
+        <Button Grid.Row="3" Grid.Column="6" Grid.ColumnSpan="3" MaxWidth="120" Name="ConfirmButton">
+            Confirm
+        </Button>
+    </Grid>
+</Window>
