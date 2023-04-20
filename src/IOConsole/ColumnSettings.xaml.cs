@@ -1,8 +1,9 @@
-﻿using IOConsole.Serializable;
-using System;
+﻿using System;
+using IOConsole.Data.Serializable;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -21,12 +22,16 @@ public partial class ColumnSettings : Window
     private static readonly JsonSerializerOptions Jso = new() { WriteIndented = true };
     private static readonly string PartColumnConfigFile = Path.Combine(MainWindow.DataDir, "part_column_config.json");
 
-    public ColumnSettings()
+    public ColumnSettings(string firstLine)
     {
         InitializeComponent();
 
         Initialize();
         SetBindings();
+
+        var elements = firstLine.Split(',', StringSplitOptions.TrimEntries);
+        var marked = elements.Select((t, i) => $"{t}({i + 1})");
+        FirstLine.Text = string.Join(',', marked);
 
         ConfirmButton.Click += ConfirmColumnSettings;
     }
@@ -57,33 +62,13 @@ public partial class ColumnSettings : Window
         }
     }
 
-    private void SetTextEvent(object sender, TextChangedEventArgs e)
+    private static void SetTextEvent(object sender, TextChangedEventArgs e)
     {
         var box = (TextBox)sender;
 
         // only allow numeric characters
         box.Text = Regex.Replace(box.Text, @"[^\d]+", string.Empty).TrimStart('0');
         box.CaretIndex = box.Text.Length;
-
-        // attach TextBlocks
-        var textBlocks = FindVisualChildren<TextBlock>(TextBoxesGrid).ToArray();
-        if (box.Name.Contains("Column", StringComparison.Ordinal))
-        {
-            var textBlock = (
-                from b in textBlocks
-                where b.Name == box.Name.Replace("NumberBox", "Alpha")
-                select b).First();
-
-            textBlock.Text = $"({NumberToAlpha(int.Parse(box.Text))})";
-        }
-    }
-
-    private static string NumberToAlpha(int number)
-    {
-        if (number > 26)
-            return string.Empty;
-
-        return Convert.ToChar(Convert.ToInt16('A') + number - 1).ToString();
     }
 
     private void SetBindings()

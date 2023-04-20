@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace IOConsole.Serializable;
+namespace IOConsole.Data.Serializable;
 
 [Serializable]
 public class PartColumnConfig
