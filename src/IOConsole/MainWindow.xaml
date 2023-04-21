@@ -4,13 +4,18 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="IO Console" Height="560" Width="1000" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+        Title="IO Console" Height="600" Width="1000" WindowStartupLocation="CenterScreen"
+        Background="FloralWhite"
+        ResizeMode="CanMinimize">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="1.2*"/>
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Import/Export SPEA BOM CSV" Margin="5">
+        <GroupBox Grid.Row="0" Header="Import/Export SPEA BOM CSV" Margin="5"
+                  Name="IOGroupBox"
+                  AllowDrop="True"
+                  Background="AliceBlue">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -23,27 +28,27 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Label Grid.Column="0">
                     Choose File(s):
                 </Label>
-                <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4" Name="CsvFilenameBox"/>
+                <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4" Name="CsvFilenameBox" AllowDrop="True"/>
                 <Button Grid.Column="5" Grid.Row="0" Content="Select" Name="SelectCsvButton"/>
-                <Button Grid.Column="1" Grid.Row="1" Content="Import Csv File" Name="ImportCsvButton"/>
-                <Button Grid.Column="2" Grid.Row="1" Content="Rollback Last Importation" Name="RollbackButton"/>
-                <Button Grid.Column="4" Grid.Row="1" Content="Export Csv File" Name="ExportCsvButton"/>
+                <Button Grid.Column="5" Grid.Row="1" Content="Import Csv File" Name="ImportCsvButton"/>
+                <Button Grid.Column="4" Grid.Row="1" Content="Rollback Last Importation" Name="RollbackButton"/>
+                <Button Grid.Column="5" Grid.Row="2" Content="Export Csv File" Name="ExportCsvButton"/>
             </Grid>
         </GroupBox>
-        <GroupBox Grid.Row="1" Header="Update Database" Margin="5, 0, 5, 5">
+        <GroupBox Grid.Row="1" Header="Update Database" Margin="5, 0, 5, 5" Background="Azure">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <RowDefinition Height="2.2*"/>
+                    <RowDefinition Height="3*"/>
                 </Grid.RowDefinitions>
                 <GroupBox Grid.Row="0" Header="Search by Part Number" Margin="5">
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -58,16 +63,6 @@
                         <Button Grid.Column="2" Grid.Row="0" Name="QueryPartNumberButton">
                             Search
                         </Button>
-                        <Label Grid.Column="0" Grid.Row="1">
-                            Note:
-                        </Label>
-                        <TextBlock Grid.Column="1" Grid.Row="1"
-                                   Grid.ColumnSpan="2"
-                                   FontFamily="Consolas"
-                                   FontSize="14"
-                                   TextAlignment="Left" VerticalAlignment="Center" Margin="5">
-                            You can enter multiple or partial part numbers, separated by comma (,).
-                        </TextBlock>
                     </Grid>
                 </GroupBox>
                 <GroupBox Grid.Row="1" Header="Query Result" Margin="5">
@@ -85,7 +80,7 @@
                                   Name="QueryResultsDataGrid">
                             <DataGrid.Resources>
                                 <Style TargetType="DataGrid">
-                                    <Setter Property="FontFamily" Value="Consolas"></Setter>
+                                    <Setter Property="FontFamily" Value="Consolas"/>
                                     <Setter Property="FontSize" Value="14"></Setter>
                                     <Setter Property="AutoGenerateColumns" Value="False"/>
                                     <Setter Property="CanUserAddRows" Value="False"/>
@@ -93,7 +88,9 @@
                                     <Setter Property="CanUserDeleteRows" Value="False"/>
                                     <Setter Property="HeadersVisibility" Value="Column"/>
                                     <Setter Property="HorizontalGridLinesBrush" Value="Gray"/>
-                                    <Setter Property="VerticalGridLinesBrush" Value="LightGray"></Setter>
+                                    <Setter Property="VerticalGridLinesBrush" Value="LightGray"/>
+                                    <Setter Property="BorderThickness" Value="0.5"/>
+                                    <Setter Property="Background" Value="White"/>
                                 </Style>
                                 <Style TargetType="DataGridCell">
                                     <Setter Property="TextBlock.TextAlignment" Value="Center"/>

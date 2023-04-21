@@ -1,14 +1,18 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
 using IOConsole.Data;
 using IOConsole.Data.Serializable;
+using DataFormats = System.Windows.DataFormats;
+using DragEventArgs = System.Windows.DragEventArgs;
 using MessageBox = System.Windows.MessageBox;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
@@ -65,6 +69,9 @@ public partial class MainWindow : Window
     {
         QueryResultsDataGrid.ItemsSource = QueryResultsCollection;
 
+        IOGroupBox.Drop += DropFilesIntoBox;
+        CsvFilenameBox.Drop += DropFilesIntoBox;
+
         SelectCsvButton.Click += SelectCsvButtonOnClick;
 
         ImportCsvButton.Click += ImportCsvButtonOnClick;
@@ -79,6 +86,37 @@ public partial class MainWindow : Window
         };
 
         UpdateRecordButton.Click += UpdateRecordButtonOnClick;
+    }
+
+    private void DropFilesIntoBox(object? sender, DragEventArgs e)
+    {
+        try
+        {
+            var files = (string[]?)e.Data.GetData(DataFormats.FileDrop);
+            if (files is not null)
+                CopyAndDisplayFiles(files);
+        }
+        catch (Exception exception)
+        {
+            MessageBox.Show(exception.Message, "Select Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+    }
+
+    private void CopyAndDisplayFiles(string[] files)
+    {
+        if (files.Any(file => !file.EndsWith(".csv", StringComparison.OrdinalIgnoreCase)))
+            throw new Exception("Please select only csv files.");
+
+        // avoid file access error
+        foreach (var file in files)
+        {
+            var fi = new FileInfo(file);
+            var copiedFile = Path.Combine(TempCopyDir, fi.Name);
+            fi.CopyTo(Path.Combine(TempCopyDir, fi.Name));
+            SelectedFiles.Add(copiedFile);
+        }
+
+        CsvFilenameBox.Text = string.Join(';', files);
     }
 
     private void SelectCsvButtonOnClick(object? sender, RoutedEventArgs args)
@@ -97,15 +135,7 @@ public partial class MainWindow : Window
 
             var files = dialog.FileNames;
 
-            foreach (var file in files)
-            {
-                var fi = new FileInfo(file);
-                var copiedFile = Path.Combine(TempCopyDir, fi.Name);
-                fi.CopyTo(Path.Combine(TempCopyDir, fi.Name));
-                SelectedFiles.Add(copiedFile);
-            }
-
-            CsvFilenameBox.Text = string.Join(';', files);
+            CopyAndDisplayFiles(files);
         }
         catch (Exception e)
         {
@@ -259,7 +289,7 @@ public partial class MainWindow : Window
             var partColumnConfig = GetColumnConfig(SelectedFiles[0]);
             Accessor.ExportCsv(partColumnConfig, dialog.SelectedPath, SelectedFiles[0]);
 
-            result = MessageBox.Show("Exported successfully, open output directory?", "Congratulations",
+            result = MessageBox.Show("Exported successfully, open the output directory?", "Congratulations",
                 MessageBoxButton.YesNo, MessageBoxImage.Information);
 
             if (result == MessageBoxResult.Yes)
