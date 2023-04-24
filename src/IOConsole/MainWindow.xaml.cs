@@ -1,5 +1,4 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -69,7 +68,7 @@ public partial class MainWindow : Window
     {
         QueryResultsDataGrid.ItemsSource = QueryResultsCollection;
 
-        IOGroupBox.Drop += DropFilesIntoBox;
+        CsvFilenameBox.PreviewDragOver += PreviewDragOverForCsvFile;
         CsvFilenameBox.Drop += DropFilesIntoBox;
 
         SelectCsvButton.Click += SelectCsvButtonOnClick;
@@ -88,6 +87,16 @@ public partial class MainWindow : Window
         UpdateRecordButton.Click += UpdateRecordButtonOnClick;
     }
 
+    private static void PreviewDragOverForCsvFile(object sender, DragEventArgs e)
+    {
+        var files = (string[]?)e.Data.GetData(DataFormats.FileDrop);
+
+        if (files is null) return;
+
+        var existenceCheck = files.Select(f => f.EndsWith(".csv", StringComparison.OrdinalIgnoreCase));
+        e.Handled = !existenceCheck.Contains(false);
+    }
+
     private void DropFilesIntoBox(object? sender, DragEventArgs e)
     {
         try
@@ -98,21 +107,18 @@ public partial class MainWindow : Window
         }
         catch (Exception exception)
         {
-            MessageBox.Show(exception.Message, "Select Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            MessageBox.Show(exception.Message, "Drop File Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
     }
 
     private void CopyAndDisplayFiles(string[] files)
     {
-        if (files.Any(file => !file.EndsWith(".csv", StringComparison.OrdinalIgnoreCase)))
-            throw new Exception("Please select only csv files.");
-
         // avoid file access error
         foreach (var file in files)
         {
             var fi = new FileInfo(file);
             var copiedFile = Path.Combine(TempCopyDir, fi.Name);
-            fi.CopyTo(Path.Combine(TempCopyDir, fi.Name));
+            fi.CopyTo(Path.Combine(TempCopyDir, fi.Name), true);
             SelectedFiles.Add(copiedFile);
         }
 
@@ -152,8 +158,11 @@ public partial class MainWindow : Window
             fi.Delete();
     }
 
-    private static PartColumnConfig GetColumnConfig(string file)
+    private PartColumnConfig GetColumnConfig(string file)
     {
+        if (FieldSeparatorBox.Text.Length == 0)
+            throw new Exception("Please set field separator first.");
+
         var firstLine = string.Empty;
         foreach (var line in File.ReadLines(file))
         {
@@ -161,13 +170,11 @@ public partial class MainWindow : Window
             firstLine = line;
             break;
         }
-        var columnSettingsWindow = new ColumnSettings(firstLine);
+        var columnSettingsWindow = new ColumnSettings(firstLine, FieldSeparatorBox.Text);
         var result = columnSettingsWindow.ShowDialog();
 
         if (result is not true)
-        {
             throw new Exception("Column Settings not set properly.");
-        }
 
         var columnConfig = (PartColumnConfig)columnSettingsWindow.DataContext;
 
@@ -178,17 +185,17 @@ public partial class MainWindow : Window
     {
         try
         {
+            ImportCsvButton.Content = "Importing";
+            ImportCsvButton.IsEnabled = false;
+
             if (SelectedFiles.Count == 0)
                 throw new Exception("Please select filename first");
 
             // backup current database file, enabling overwrite
             File.Copy(CurrentDatabaseFile, BackupDatabaseFile, true);
 
-            ImportCsvButton.Content = "Importing";
-            ImportCsvButton.IsEnabled = false;
-
             var columnConfig = GetColumnConfig(SelectedFiles[0]);
-            var affectedRows = Accessor.ImportCsvToDatabase(columnConfig, SelectedFiles);
+            var affectedRows = Accessor.ImportCsvToDatabase(columnConfig, FieldSeparatorBox.Text, SelectedFiles);
 
             var message = affectedRows == 0
                 ? "No records imported from your csv file..."
@@ -272,6 +279,11 @@ public partial class MainWindow : Window
 
         try
         {
+            ExportCsvButton.Content = "Exporting";
+            ExportCsvButton.IsEnabled = false;
+
+            var partColumnConfig = GetColumnConfig(SelectedFiles[0]);
+
             var result = MessageBox.Show("Please select output directory.", "Step 1", MessageBoxButton.OK,
                 MessageBoxImage.Information);
 
@@ -286,8 +298,7 @@ public partial class MainWindow : Window
 
             if (dr != System.Windows.Forms.DialogResult.OK) return;
 
-            var partColumnConfig = GetColumnConfig(SelectedFiles[0]);
-            Accessor.ExportCsv(partColumnConfig, dialog.SelectedPath, SelectedFiles[0]);
+            Accessor.ExportCsv(partColumnConfig, FieldSeparatorBox.Text, dialog.SelectedPath, SelectedFiles[0]);
 
             result = MessageBox.Show("Exported successfully, open the output directory?", "Congratulations",
                 MessageBoxButton.YesNo, MessageBoxImage.Information);
@@ -301,6 +312,9 @@ public partial class MainWindow : Window
         }
         finally
         {
+            ExportCsvButton.Content = "Export";
+            ExportCsvButton.IsEnabled = true;
+
             ClearCsvFiles();
         }
     }

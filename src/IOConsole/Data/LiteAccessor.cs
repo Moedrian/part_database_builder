@@ -56,7 +56,7 @@ public class LiteAccessor
         command.ExecuteNonQuery();
     }
 
-    public int ImportCsvToDatabase(PartColumnConfig columnConfig, IEnumerable<string> inputFiles)
+    public int ImportCsvToDatabase(PartColumnConfig columnConfig, string fieldSeparator, IEnumerable<string> inputFiles)
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
@@ -114,7 +114,10 @@ public class LiteAccessor
                 {
                     if (lines[i].Length == 0) continue;
 
-                    var elements = lines[i].Split(',', StringSplitOptions.TrimEntries);
+                    var elements = lines[i].Split(fieldSeparator, StringSplitOptions.TrimEntries);
+
+                    if (elements[columnConfig.PartNumberColumn - 1].Length == 0)
+                        continue;
 
                     partNumberParameter.Value = elements[columnConfig.PartNumberColumn - 1];
                     deviceTypeParameter.Value = elements[columnConfig.DeviceTypeColumn - 1];
@@ -141,12 +144,12 @@ public class LiteAccessor
         }
     }
 
-    public void ExportCsv(PartColumnConfig columnConfig, string outputDirectory, string filename)
+    public void ExportCsv(PartColumnConfig columnConfig, string fieldSeparator, string outputDirectory, string filename)
     {
         var lines = File.ReadAllLines(filename);
         var stringBuilder = new StringBuilder();
 
-        var header = new string?[10];
+        var header = new string?[20];
         header[columnConfig.DrawingReferenceColumn - 1] = "Drawing Reference";
         header[columnConfig.PartNumberColumn - 1] = "Part Number";
         header[columnConfig.DeviceTypeColumn - 1] = "Device Type";
@@ -156,7 +159,7 @@ public class LiteAccessor
         header[columnConfig.NegativeToleranceColumn - 1] = "Tol-";
         header[columnConfig.CaseColumn - 1] = "Case";
         header[columnConfig.CaseIdentifierColumn - 1] = "CaseIdentifier";
-        var headerString = string.Join(",", header.Where(x => x is not null));
+        var headerString = string.Join(fieldSeparator, header.Where(x => x is not null));
 
         stringBuilder.AppendLine(headerString);
 
@@ -168,8 +171,11 @@ public class LiteAccessor
         for (var i = columnConfig.SkippedRow; i < lines.Length; i++)
         {
             if (lines[i].Length == 0) continue;
-            var lineElements = lines[i].Split(',', StringSplitOptions.TrimEntries);
+
+            var lineElements = lines[i].Split(fieldSeparator, StringSplitOptions.TrimEntries);
             var partNumber = lineElements[columnConfig.PartNumberColumn - 1];
+            if (partNumber.Length == 0) continue;
+
             var drawingReference = lineElements[columnConfig.DrawingReferenceColumn - 1];
 
             command.CommandText = SelectJsonCommandText + $" WHERE partNumber='{partNumber}'";
@@ -186,7 +192,7 @@ public class LiteAccessor
 
                 if (part != null)
                 {
-                    var partLine = new string?[10];
+                    var partLine = new string?[20];
                     partLine[columnConfig.DrawingReferenceColumn - 1] = drawingReference;
                     partLine[columnConfig.PartNumberColumn - 1] = partNumber;
                     partLine[columnConfig.DeviceTypeColumn - 1] = part.DeviceType;
@@ -196,7 +202,7 @@ public class LiteAccessor
                     partLine[columnConfig.NegativeToleranceColumn - 1] = part.NegativeTolerance;
                     partLine[columnConfig.CaseColumn - 1] = part.Case;
                     partLine[columnConfig.CaseIdentifierColumn - 1] = part.CaseIdentifier;
-                    stringBuilder.AppendLine(string.Join(',', partLine.Where(x => x is not null)));
+                    stringBuilder.AppendLine(string.Join(fieldSeparator, partLine.Where(x => x is not null)));
                 }
                 else
                 {

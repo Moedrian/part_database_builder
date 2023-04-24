@@ -38,7 +38,7 @@
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <!-- ROW 0 -->
+            <!-- ROW 1 -->
             <Label Grid.Row="0" Grid.Column="0" Content="Drawing Reference:"/>
             <TextBox Grid.Row="0" Grid.Column="1" Name="DrawingReferenceColumnNumberBox"/>
 
@@ -53,7 +53,7 @@
 
             <Label Grid.Row="0" Grid.Column="8" Content="Value:"/>
             <TextBox Grid.Row="0" Grid.Column="9" Name="ValueColumnNumberBox"/>
-            <!-- ROW 1 -->
+            <!-- ROW 2 -->
             <Label Grid.Row="1" Grid.Column="0" Content="Tol+:"/>
             <TextBox Grid.Row="1" Grid.Column="1" Name="PositiveToleranceColumnNumberBox"/>
 
@@ -65,10 +65,10 @@
 
             <Label Grid.Row="1" Grid.Column="6" Content="Case Identifier:"/>
             <TextBox Grid.Row="1" Grid.Column="7" Name="CaseIdentifierColumnNumberBox"/>
-            <!-- ROW 2 -->
+            <!-- ROW 3 -->
             <Label Grid.Row="2" Grid.Column="7" Grid.ColumnSpan="2" Content="Skipped rows in csv:"/>
             <TextBox Grid.Row="2" Grid.Column="9" Name="SkippedRowNumberBox"/>
-            <!-- ROW 3 -->
+            <!-- ROW 4 -->
             <Button Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2" MaxWidth="120" Name="ConfirmButton">
                 Confirm
             </Button>

@@ -3,7 +3,6 @@ using IOConsole.Data.Serializable;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -22,16 +21,16 @@ public partial class ColumnSettings : Window
     private static readonly JsonSerializerOptions Jso = new() { WriteIndented = true };
     private static readonly string PartColumnConfigFile = Path.Combine(MainWindow.DataDir, "part_column_config.json");
 
-    public ColumnSettings(string firstLine)
+    public ColumnSettings(string firstLine, string fieldSeparator)
     {
         InitializeComponent();
 
         Initialize();
         SetBindings();
 
-        var elements = firstLine.Split(',', StringSplitOptions.TrimEntries);
+        var elements = firstLine.Split(fieldSeparator, StringSplitOptions.TrimEntries);
         var marked = elements.Select((t, i) => $"{t}({i + 1})");
-        FirstLine.Text = string.Join(',', marked);
+        FirstLine.Text = string.Join(fieldSeparator, marked);
 
         ConfirmButton.Click += ConfirmColumnSettings;
     }

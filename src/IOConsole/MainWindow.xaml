@@ -12,10 +12,7 @@
             <RowDefinition Height="1.2*"/>
             <RowDefinition Height="3*"/>
         </Grid.RowDefinitions>
-        <GroupBox Grid.Row="0" Header="Import/Export SPEA BOM CSV" Margin="5"
-                  Name="IOGroupBox"
-                  AllowDrop="True"
-                  Background="AliceBlue">
+        <GroupBox Grid.Row="0" Header="Import/Export SPEA BOM CSV" Margin="5" Background="AliceBlue">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -30,10 +27,14 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Grid.Column="0">
+                <Label Grid.Column="0" Grid.Row="0">
                     Choose File(s):
                 </Label>
                 <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="4" Name="CsvFilenameBox" AllowDrop="True"/>
+                <Label Grid.Column="0" Grid.Row="1">
+                    CSV Field Separator:
+                </Label>
+                <TextBox Grid.Column="1" Grid.Row="1" Name="FieldSeparatorBox"/>
                 <Button Grid.Column="5" Grid.Row="0" Content="Select" Name="SelectCsvButton"/>
                 <Button Grid.Column="5" Grid.Row="1" Content="Import Csv File" Name="ImportCsvButton"/>
                 <Button Grid.Column="4" Grid.Row="1" Content="Rollback Last Importation" Name="RollbackButton"/>
